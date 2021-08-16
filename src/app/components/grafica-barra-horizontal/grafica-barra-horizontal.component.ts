@@ -1,32 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GotyService } from '../../services/goty.service';
-import { WebsocketService } from '../../services/websocket.service';
+import { Component, Input } from '@angular/core';
+
+
 
 @Component({
   selector: 'app-grafica-barra-horizontal',
   templateUrl: './grafica-barra-horizontal.component.html',
   styleUrls: ['./grafica-barra-horizontal.component.css']
 })
-export class GraficaBarraHorizontalComponent implements OnInit {
+export class GraficaBarraHorizontalComponent {
 
-  results = [
-    {
-      name: 'Juego 1',
-      value: 20
-    },
-    {
-      name: 'Juego 2',
-      value: 25
-    },
-    {
-      name: 'Juego 3',
-      value: 15
-    },
-    {
-      name: 'Juego 4',
-      value: 20
-    }
-  ];
+  @Input() results = [];
+
   view: any[] = [700, 400];
 
   // options
@@ -40,44 +24,7 @@ export class GraficaBarraHorizontalComponent implements OnInit {
   xAxisLabel     = 'Votos';
   colorScheme    = 'nightLights';
 
-  constructor( private gotyService: GotyService,
-               private wsService: WebsocketService ) {}
-
-  ngOnInit(): void {
-
-    this.gotyService.getGoty().subscribe(
-
-      goty => {
-
-        this.results = goty.map( game => {
-          return {
-            name: game.name,
-            value: game.votos
-          };
-        });
-
-      }
-
-    );
-
-    this.escucharSocket();
-
-  }
-
-  escucharSocket(): void {
-    this.wsService.listen( 'cambio-goty' ).subscribe(
-
-      goty => {
-        const results = [ ...this.results ];
-
-        results.find( r => r.name === goty.name ).value = goty.votos;
-
-        this.results = results;
-
-      }
-
-    );
-  }
+  constructor( ) {}
 
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
